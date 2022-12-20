@@ -54,7 +54,7 @@ jobs:
       - name: zip api code
         uses: montudor/action-zip@v1
         with:
-          args: zip -qq -r api.zip api
+          args: zip -qq -r api.zip api/*
         
       - name: update lamdba
         run: aws lambda update-function-code --function-name lamdba-private-cert-jeong --zip-file fileb://./api.zip
