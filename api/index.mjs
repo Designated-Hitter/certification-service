@@ -3,7 +3,7 @@ export const handler = async(event) => {
   const method = event.requestContext.http.method;
   const path = event.requestContext.http.path;
 
-  const bodyString = event.pathParameters?.body;
+  const bodyString = event.body;
   const body = bodyString ? JSON.parse(bodyString) : null;
 
   // Root
@@ -14,10 +14,10 @@ export const handler = async(event) => {
     }
   }
 
-  if (method === 'POST' && path === '/registr') {
+  if (method === 'POST' && path === '/register') {
     return {
       statusCode: 200,
-      body
+      body: `${body.id}님의 회원가입을 축하합니다!`
     }
   }
 };
