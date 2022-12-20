@@ -1,7 +1,7 @@
 name: private-cert CI
 
 on:
-  pull_request:
+  push:
     branches: ["main"]
     
 jobs:
