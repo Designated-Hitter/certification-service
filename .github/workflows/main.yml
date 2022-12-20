@@ -1,0 +1,61 @@
+name: private-cert CI
+
+on:
+  pull_request:
+    branches: ["main"]
+    
+jobs:
+  build:
+    runs-on:
+      ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.12.1
+          
+      - name: setup python
+        uses: actions/setup-python@v1
+        with: 
+          python-version: "3.x"
+          
+      - name: setup aws cli
+        run: pip3 install awscli --upgrade --user
+          
+      - name: aws login
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: ap-northeast-2
+          mask-aws-account-id: true
+          
+      - name: app npm install
+        working-directory: ./app
+        run: npm i
+        
+      - name: app build
+        working-directory: ./app
+        run: npm run build
+        
+      - name: s3 deploy
+        working-directory: ./app
+        run: aws s3 sync ./dist s3://s3-private-cert-jeong --acl public-read --delete
+        
+      - name: cache invalidation
+        run: aws cloudfront create-invalidation --distribution-id ${{secrets.AWS_CF_DISTRIBUTION_ID}} --paths "/*"
+        
+      - name: api npm install
+        working-directory: ./api
+        run: npm i
+        
+      - name: zip api code
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r api.zip api
+        
+      - name: update lamdba
+        run: aws lambda update-function-code --function-name lamdba-private-cert-jeong --zip-file fileb://./api.zip
+        
