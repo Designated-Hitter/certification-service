@@ -1,7 +1,7 @@
 name: private-cert CI
 
 on:
-  pull_request:
+  push:
     branches: ["main"]
     
 jobs:
@@ -51,11 +51,14 @@ jobs:
         working-directory: ./api
         run: npm i
         
+      - name: install zip
+        run: sudo apt-get install zip 
+        
       - name: zip api code
-        uses: montudor/action-zip@v1
-        with:
-          args: zip -qq -r api.zip api
+        working-directory: ./api
+        run: zip -qq api.zip -r ./*
         
       - name: update lamdba
+        working-directory: ./api
         run: aws lambda update-function-code --function-name lamdba-private-cert-jeong --zip-file fileb://./api.zip
         
