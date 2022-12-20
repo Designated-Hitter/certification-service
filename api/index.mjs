@@ -1,8 +1,23 @@
 export const handler = async(event) => {
-  // TODO implement
-  const response = {
+
+  const method = event.requestContext.http.method;
+  const path = event.requestContext.http.path;
+
+  const bodyString = event.pathParameters?.body;
+  const body = bodyString ? JSON.parse(bodyString) : null;
+
+  // Root
+  if (method === 'GET' && path === '/') {
+    return {
       statusCode: 200,
-      body: JSON.stringify(event),
-  };
-  return response;
+      body: 'Hello World!'
+    }
+  }
+
+  if (method === 'POST' && path === '/registr') {
+    return {
+      statusCode: 200,
+      body
+    }
+  }
 };
