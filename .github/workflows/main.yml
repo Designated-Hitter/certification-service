@@ -52,7 +52,7 @@ jobs:
         run: npm i
         
       - name: install zip
-        run: apt-get install zip 
+        run: sudo apt-get install zip 
         
       - name: zip api code
         working-directory: ./api
