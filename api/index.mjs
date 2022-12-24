@@ -63,7 +63,7 @@ export const handler = async(event) => {
     const [rowsSuccessfullyJoined] = await connection.execute(`INSERT INTO membership-list(email, nickname) VALUES (?, ?)`, [email, nickname]);
     
     //인증 이메일 보내기
-    const randomCode = '';
+    const randomCode = '';//수정필요
 
     const [rowsVerification] = await connection.execute(`INSERT INTO verification-data(email, verification_code) VALUES (?, ?)`, [email, randomCode])
 
