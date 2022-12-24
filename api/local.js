@@ -9,10 +9,10 @@ app.use(async (req, res) => {
     "requestContext":{
        "http":{
           "method": req.method,
-          "path": req.url,
+          "path": req.url
        },
     },
-    "body": JSON.stringify(req.body),
+    "body": JSON.stringify(req.body)
   }
 
   const result = await handler(event);
