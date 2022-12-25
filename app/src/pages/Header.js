@@ -3,7 +3,7 @@ function Header () {
 
   return (
     <div className = "Header">
-      <label>Certification System</label>
+      <label> Certification System </label>
     </div>
   );
 }

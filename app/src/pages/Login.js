@@ -11,7 +11,7 @@ function Login () {
   async function tryLogin() {
     const {data} = { //axios가 아닌 api gateway로 보내는 방법 조사하기
       method: "POST",
-      url: "",
+      url: "https://ri2ar9z645.execute-api.ap-northeast-2.amazonaws.com",
       data: {
         email: email
       }
