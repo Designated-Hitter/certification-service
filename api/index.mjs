@@ -63,7 +63,7 @@ export const handler = async(event) => {
     const [rowsSuccessfullyJoined] = await connection.execute(`INSERT INTO membership-list(email, nickname) VALUES (?, ?)`, [email, nickname]);
     
     //인증 이메일 보내기
-    const randomCode = '';//수정필요
+    const randomCode = bcrypt.hashSync(email, 10);
 
     const [rowsVerification] = await connection.execute(`INSERT INTO verification-data(email, verification_code) VALUES (?, ?)`, [email, randomCode])
 
@@ -71,7 +71,7 @@ export const handler = async(event) => {
     emailForm.append("from", `no-reply@mail.okayu.xyz`)
     emailForm.append("to", email)
     emailForm.append("subject", `이메일 인증 코드입니다.`)
-    emailForm.append("html", `<a href="https://critique.okayu.xyz/EmailVerify.html?email=${email}code=${randomCode}">여기를 클릭해주세요.</a>`) //URL 수정해라
+    emailForm.append("html", `<a href="https://d34d11yyckhjad.cloudfront.net/EmailVerify.html?email=${email}code=${randomCode}">여기를 클릭해주세요.</a>`) 
     
     return {
       statusCode: 200,
