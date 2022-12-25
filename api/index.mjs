@@ -143,7 +143,7 @@ export const handler = async(event) => {
   if (method === 'POST' && path === '/Login') {
     const email = body.email;
     const hashedMail = bcrypt.hashSync(email, 10);
-    let now = new Date();
+    const now = (+ new Date()).toString();
     const hashedDate = bcrypt.hashSync(now, 10);
     const loginCode = bcrypt.hashSync(hashedMail + hashedDate, 10);
     const [rowsLoginCode] = await connection.execute(`INSERT INTO login_data(email, login_code) VALUES (?, ?)`, [email, loginCode]);
