@@ -33,7 +33,9 @@ export const handler = async(event) => {
     return {
       statusCode: 200,
       headers: corsHeader,
-      body: 'api backend test'
+      body: JSON.stringify({
+        message: 'api backend test'
+      })
     }
   }
 

@@ -21,7 +21,7 @@ app.use(async (req, res) => {
   const result = await handler(event);
 
   if (result) {
-    res.status(result.statusCode).json(result.body);
+    res.status(result.statusCode).header(result.headers).json(result.body);
   } else {
     res.status(400).json('no endpoint');
   }
