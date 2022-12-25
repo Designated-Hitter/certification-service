@@ -8,8 +8,6 @@ export const handler = async(event) => {
 
   const mysql = require ('mysql2');
   const bcrypt = require ('bcrypt');
-  const jwt = require('jsonwebtoken');
-
   const FormData = require('form-data');
 
   const pool = mysql.createPool({
@@ -34,7 +32,7 @@ export const handler = async(event) => {
   }
 
   //회원가입
-  if (method === 'POST' && path === '/register') {
+  if (method === 'POST' && path === '/Join') {
     const email = body.email;
     const nickname = body.nickname;
 
@@ -44,8 +42,9 @@ export const handler = async(event) => {
     if (rowsEmailCheck.length) {
       
       return {
+        statusCode: 402,
         success: false,
-        error: '이미 가입된 이메일 입니다.'
+        message: '이미 가입된 이메일 입니다.'
         };
     };
 
@@ -55,8 +54,9 @@ export const handler = async(event) => {
     if (rowsNicknameCheck.length) {
       
       return {
+        statusCode: 402,
         success: false,
-        error: '중복된 닉네임은 사용할 수 없습니다.'
+        message: '중복된 닉네임은 사용할 수 없습니다.'
       };
     };
 
@@ -71,20 +71,58 @@ export const handler = async(event) => {
     emailForm.append("from", `no-reply@mail.okayu.xyz`)
     emailForm.append("to", email)
     emailForm.append("subject", `이메일 인증 코드입니다.`)
-    emailForm.append("html", `<a href="https://critique.okayu.xyz/emailVerify.html?code=${randomCode}">여기를 클릭해주세요.</a>`) //URL 수정해라
+    emailForm.append("html", `<a href="https://critique.okayu.xyz/EmailVerify.html?email=${email}code=${randomCode}">여기를 클릭해주세요.</a>`) //URL 수정해라
     
     return {
       statusCode: 200,
       success: true,
-      body: `${nickname}님의 회원가입을 축하합니다! 인증메일을 확인해주세요.`
+      message: `${nickname}님의 회원가입을 축하합니다! 인증메일을 확인해주세요.`
     }
   }
 
   //인증메일 체크
+  if (method === 'POST' && path ==='/EmailVerify') {
+    const email = ''; //params로 받은 메일
+    const code = ''; //params로 받은 코드
+
+    const [rowsEmailVerify] = await connection.execute(`SELECT email, verification_code,used_code FROM verification-data WHERE email = ?`, [email]);
+
+    if (rowsEmailVerify.used_code !== 0) {
+
+      return {
+        statusCode: 400,
+        success: false,
+        message: '이미 사용된 코드입니다.'
+      }
+
+    }
+
+    if (rowsEmailVerify.verification_code === code) {
+
+      const [rowsUsedVerificationCode] = await connection.execute(`UPDATE verification-data SET used_code = '1' WHERE email = ?`, [email]);
+
+      return {
+        statusCode: 200,
+        success: true,
+      }
+      
+    }
+
+    if (rowsEmailVerify.verification_code !== code) {
+
+      return {
+        statusCode: 401,
+        success: false,
+        message: '잘못된 접근입니다.'
+      }
+
+    }
+
+  }
 
 
   //로그인하기
-  if (method === 'POST' && path === '/') {
+  if (method === 'POST' && path === '/Login') {
     const email = body.email;
     const hashedMail = bcrypt.hashSync(email, 10);
     let now = new Date();
@@ -96,33 +134,50 @@ export const handler = async(event) => {
     emailForm.append("from", `no-reply@mail.okayu.xyz`)
     emailForm.append("to", email)
     emailForm.append("subject", `이메일 인증 코드입니다.`)
-    emailForm.append("html", `<a href="https://critique.okayu.xyz/emailVerify.html?code=${loginCode}">여기를 클릭해주세요.</a>`) //URL 수정해라
+    emailForm.append("html", `<a href="https://d34d11yyckhjad.cloudfront.net/Login.html?code=${loginCode}">여기를 클릭해주세요.</a>`) 
 
     return {
       statusCode: 200,
       success: true,
-      body: `로그인을 완료 하려면 메일을 확인해주세요`
+      message: `로그인을 완료 하려면 메일을 확인해주세요`
     }
   }
 
   //로그인 메일 확인
-  if (method === 'GET' && path === '/main') {
+  if (method === 'GET' && path === '/Login') {
     const email = body.email;
     const loginCode = body.loginCode; //수정필요
 
-    const [rowsCompare] = await connection.execute(`SELECT email, login_code FROM login-data WHERE email = ?`, [email]);
+    const [rowsCompare] = await connection.execute(`SELECT email, login_code, used_code FROM login-data WHERE email = ?`, [email]);
 
-    if (!rowsCompare.length) {
+    if (rowsCompare.used_code !== 0) {
+
       return {
+        statusCode: 400,
         success: false,
-        body: '잘못된 접근입니다.'
+        message: '이미 사용된 코드입니다.'
+      }
+
+    }
+
+    if (rowsCompare.login_code !== loginCode) {
+
+      return {
+        statusCode: 401,
+        success: false,
+        message: '잘못된 접근입니다.'
       }
     }
 
-    return {
-      statusCode: 200,
-      success: true,
-      body: '로그인 성공'
+    if (rowsCompare.login_code === loginCode) {
+
+      const [rowsUsedLoginCode] = await connection.execute(`UPDATE login-data SET used_code = '1' WHERE login_code = ?`, [loginCode]);
+
+      return {
+        statusCode: 200,
+        success: true,
+        message: '로그인 성공'
+      }
     }
 
   }
