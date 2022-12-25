@@ -1,5 +1,8 @@
 import express from "express";
 import { handler } from "./index.mjs";
+import dotenv from 'dotenv';
+
+dotenv.config({ path: "./.env" });
 
 const app = express();
 app.use(express.json());

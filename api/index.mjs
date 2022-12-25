@@ -2,9 +2,6 @@ import mysql from 'mysql2';
 import bcrypt from 'bcrypt';
 import FormData from 'form-data';
 import axios from 'axios';
-import dotenv from 'dotenv';
-
-dotenv.config({ path: "./.env" });
 
 export const handler = async(event) => {
   const method = event.requestContext.http.method;
