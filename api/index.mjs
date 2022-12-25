@@ -1,6 +1,10 @@
 import mysql from 'mysql2';
 import bcrypt from 'bcrypt';
 import FormData from 'form-data';
+import axios from 'axios';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const handler = async(event) => {
   
@@ -16,8 +20,8 @@ export const handler = async(event) => {
   const pool = mysql.createPool({
     host: 'db-private-cert-jeong.cluster-cqdqncbrwk60.ap-northeast-2.rds.amazonaws.com',
     user: 'admin',
-    database: 'db-private-cert-jeong',
-    password: 'qBQTcReq56vm7SqV2BkQ',
+    database: 'membership',
+    password: process.env.DB_PASSWORD,
     port: '3306',
     waitForConnections: true,
     connectionLimit: 10,
@@ -40,7 +44,7 @@ export const handler = async(event) => {
     const nickname = body.nickname;
 
     //중복 가입 체크
-    const [rowsEmailCheck] = await connection.execute(`SELECT email FROM membership-list WHERE email = ?`, [email]);
+    const [rowsEmailCheck] = await connection.execute(`SELECT email FROM membership_list WHERE email = ?`, [email]);
 
     if (rowsEmailCheck.length) {
       
@@ -52,7 +56,7 @@ export const handler = async(event) => {
     };
 
     //중복 닉네임 체크
-    const [rowsNicknameCheck] = await connection.execute(`SELECT nickname FROM membership-list WHERE nickname = ?`, [nickname]);
+    const [rowsNicknameCheck] = await connection.execute(`SELECT nickname FROM membership_list WHERE nickname = ?`, [nickname]);
 
     if (rowsNicknameCheck.length) {
       
@@ -63,18 +67,30 @@ export const handler = async(event) => {
       };
     };
 
-    const [rowsSuccessfullyJoined] = await connection.execute(`INSERT INTO membership-list(email, nickname) VALUES (?, ?)`, [email, nickname]);
+    const [rowsSuccessfullyJoined] = await connection.execute(`INSERT INTO membership_list(email, nickname) VALUES (?, ?)`, [email, nickname]);
     
     //인증 이메일 보내기
     const randomCode = bcrypt.hashSync(email, 10);
 
-    const [rowsVerification] = await connection.execute(`INSERT INTO verification-data(email, verification_code) VALUES (?, ?)`, [email, randomCode])
+    const [rowsVerification] = await connection.execute(`INSERT INTO verification_data(email, verification_code) VALUES (?, ?)`, [email, randomCode])
 
     let emailForm = new FormData()
     emailForm.append("from", `no-reply@mail.okayu.xyz`)
     emailForm.append("to", email)
     emailForm.append("subject", `이메일 인증 코드입니다.`)
-    emailForm.append("html", `<a href="https://d34d11yyckhjad.cloudfront.net/EmailVerify.html?email=${email}code=${randomCode}">여기를 클릭해주세요.</a>`) 
+    emailForm.append("html", `<a href="https://d34d11yyckhjad.cloudfront.net/EmailVerify.html?email=${email}code=${randomCode}">여기를 클릭해주세요.</a>`)
+    
+    await axios({
+      method: 'POST',
+      url: "https://api.mailgun.net/v3/mail.okayu.xyz/messages",
+      auth: {
+        username: "api",
+        password: process.env.MAILGUN_API_PASSWORD,
+        },
+        headers : emailForm.getHeaders(),
+        data: emailForm
+    })
+    
     
     return {
       statusCode: 200,
@@ -88,7 +104,7 @@ export const handler = async(event) => {
     const email = ''; //params로 받은 메일
     const code = ''; //params로 받은 코드
 
-    const [rowsEmailVerify] = await connection.execute(`SELECT email, verification_code,used_code FROM verification-data WHERE email = ?`, [email]);
+    const [rowsEmailVerify] = await connection.execute(`SELECT email, verification_code,used_code FROM verification_data WHERE email = ?`, [email]);
 
     if (rowsEmailVerify.used_code !== 0) {
 
@@ -102,7 +118,7 @@ export const handler = async(event) => {
 
     if (rowsEmailVerify.verification_code === code) {
 
-      const [rowsUsedVerificationCode] = await connection.execute(`UPDATE verification-data SET used_code = '1' WHERE email = ?`, [email]);
+      const [rowsUsedVerificationCode] = await connection.execute(`UPDATE verification_data SET used_code = '1' WHERE email = ?`, [email]);
 
       return {
         statusCode: 200,
@@ -131,7 +147,7 @@ export const handler = async(event) => {
     let now = new Date();
     const hashedDate = bcrypt.hashSync(now, 10);
     const loginCode = bcrypt.hashSync(hashedMail + hashedDate, 10);
-    const [rowsLoginCode] = await connection.execute(`INSERT INTO login-data(email, login_code) VALUES (?, ?)`, [email, loginCode]);
+    const [rowsLoginCode] = await connection.execute(`INSERT INTO login_data(email, login_code) VALUES (?, ?)`, [email, loginCode]);
 
     let emailForm = new FormData()
     emailForm.append("from", `no-reply@mail.okayu.xyz`)
@@ -151,7 +167,7 @@ export const handler = async(event) => {
     const email = body.email;
     const loginCode = body.loginCode; //수정필요
 
-    const [rowsCompare] = await connection.execute(`SELECT email, login_code, used_code FROM login-data WHERE email = ?`, [email]);
+    const [rowsCompare] = await connection.execute(`SELECT email, login_code, used_code FROM login_data WHERE email = ?`, [email]);
 
     if (rowsCompare.used_code !== 0) {
 
@@ -174,7 +190,7 @@ export const handler = async(event) => {
 
     if (rowsCompare.login_code === loginCode) {
 
-      const [rowsUsedLoginCode] = await connection.execute(`UPDATE login-data SET used_code = '1' WHERE login_code = ?`, [loginCode]);
+      const [rowsUsedLoginCode] = await connection.execute(`UPDATE login_data SET used_code = '1' WHERE login_code = ?`, [loginCode]);
 
       return {
         statusCode: 200,

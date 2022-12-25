@@ -47,6 +47,13 @@ jobs:
       - name: cache invalidation
         run: aws cloudfront create-invalidation --distribution-id ${{secrets.AWS_CF_DISTRIBUTION_ID}} --paths "/*"
         
+      - name: create .env
+        working-directory: ./api
+        run: |
+          touch ./.env
+          echo "DB_PASSWORD=${{secrets.DB_PASSWORD}}" >> ./.env
+          echo "MAILGUN_API_PASSWORD=${{secrets.MAILGUN_API_PASSWORD}}" >> ./.env
+
       - name: api npm install
         working-directory: ./api
         run: npm i

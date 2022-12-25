@@ -30,8 +30,8 @@ function Join () {
   return (
     <div className="Join">
       <div className="FillHere">
-        <input type="email" name="email" placeholder="E-mail" value={ email } /><br />
-        <input type="nickname" name="nickname" placeholder="nickname" value={ nickname } />
+        <input type="email" name="email" placeholder="E-mail" value={ email } onChange={ handleEmail }/><br />
+        <input type="nickname" name="nickname" placeholder="nickname" value={ nickname } onChange={ handleNickname } />
       </div>
       <div className="button-area">
         <button className="join" onClick={tryJoin()}>JOIN</button>

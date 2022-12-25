@@ -27,7 +27,7 @@ function Login () {
   return (
     <div className="Login">
       <div className="email-box">
-        <input type="email" name="email" placeholder="E-mail" value={ email }/><br />
+        <input type="email" name="email" placeholder="E-mail" value={ email } onChange={ handleEmail }/><br />
       </div>
       <div className="button-area">
         <button className="join" onClick={tryJoin()}>JOIN</button>
