@@ -11,7 +11,7 @@ function Login () {
     setEmail(event.target.value);
   }
 
-  async function tryJoin () {
+  async function tryJoin() {
     Navigate('./join.html');
   }
 
@@ -32,8 +32,8 @@ function Login () {
         <input type="email" name="email" placeholder="E-mail" value={ email } onChange={ handleEmail }/><br />
       </div>
       <div className="button-area">
-        <button className="join" onClick={tryJoin()}>JOIN</button>
-        <button className="login" onClick={tryLogin()}>LOGIN</button>
+        <button className="join" onClick={tryJoin}>JOIN</button>
+        <button className="login" onClick={tryLogin}>LOGIN</button>
       </div>
     </div>
   ) 

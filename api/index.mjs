@@ -43,6 +43,9 @@ export const handler = async(event) => {
       
       return {
         statusCode: 402,
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        },
         body: '이미 가입된 이메일 입니다.'
       };
     };
@@ -53,7 +56,10 @@ export const handler = async(event) => {
     if (rowsNicknameCheck.length) {
       
       return {
-        statusCode: 402,
+        statusCode: 402, 
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        },
         body: '중복된 닉네임은 사용할 수 없습니다.'
       };
     };
@@ -85,6 +91,9 @@ export const handler = async(event) => {
     
     return {
       statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
       body: `${nickname}님의 회원가입을 축하합니다! 인증메일을 확인해주세요.`
     }
   }
@@ -100,6 +109,9 @@ export const handler = async(event) => {
 
       return {
         statusCode: 400,
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        },
         body: '이미 사용된 코드입니다.'
       }
 
@@ -110,6 +122,9 @@ export const handler = async(event) => {
       const [rowsUsedVerificationCode] = await connection.execute(`UPDATE verification_data SET used_code = '1' WHERE email = ?`, [email]);
 
       return {
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        },
         statusCode: 200
       }
       
@@ -118,6 +133,9 @@ export const handler = async(event) => {
     if (rowsEmailVerify.verification_code !== code) {
 
       return {
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        },
         statusCode: 401,
         body: '잘못된 접근입니다.'
       }
@@ -155,6 +173,9 @@ export const handler = async(event) => {
 
     return {
       statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
       body: `로그인을 완료 하려면 메일을 확인해주세요`
     }
   }
@@ -170,6 +191,9 @@ export const handler = async(event) => {
 
       return {
         statusCode: 400,
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        },
         body: '이미 사용된 코드입니다.'
       }
 
@@ -179,6 +203,9 @@ export const handler = async(event) => {
 
       return {
         statusCode: 401,
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        },
         body: '잘못된 접근입니다.'
       }
     }
@@ -189,6 +216,9 @@ export const handler = async(event) => {
 
       return {
         statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        },
         body: '로그인 성공'
       }
     }
