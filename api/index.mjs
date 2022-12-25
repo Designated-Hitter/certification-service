@@ -7,6 +7,13 @@ const corsHeader = {
   'Access-Control-Allow-Origin': '*'
 };
 
+const optionsCorsHeader = {
+  'Access-Control-Allow-Headers' : 'CContent-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'OPTIONS,GET,POST'
+
+};
+
 export const handler = async(event) => {
   const method = event.requestContext.http.method;
   const path = event.requestContext.http.path;
@@ -231,6 +238,13 @@ export const handler = async(event) => {
       }
     }
 
+  }
+
+  if (method === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: optionsCorsHeader,
+    }
   }
 
 };
