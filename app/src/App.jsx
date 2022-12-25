@@ -1,13 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import reactLogo from './assets/react.svg'
+
 
 import Header from './pages/Header.js';
-// import Login from './pages/Login.js';
-
-
+import Login from './pages/Login.js';
 import Footer from './pages/Footer.js';
-
 
 import './App.css'
 
@@ -18,8 +15,7 @@ function App() {
     <div className="App">
       
       <Header />
-      {/* <Login /> */}
-
+      <Login />
       <Footer />
 
     </div>

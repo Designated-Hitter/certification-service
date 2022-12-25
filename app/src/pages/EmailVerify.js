@@ -8,7 +8,7 @@ function EmailVerify () {
   
   const {data} = {
     method: "POST",
-    url: "https://ri2ar9z645.execute-api.ap-northeast-2.amazonaws.com",
+    url: "https://ri2ar9z645.execute-api.ap-northeast-2.amazonaws.com/EmailVerify",
     data: {
       email: email,
       code: code
@@ -20,7 +20,7 @@ function EmailVerify () {
   }
 
   if(data.succes === true) {
-    Navigate('./Login.html');
+    Navigate('./');
   }
   
 }

@@ -3,14 +3,22 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 function Join () {
 
-  const email = 'email'; //임시
-  const nickname = 'nickname'; //임시
+  const [email, setEmail] = useState("");
+  const [nickname, setNickname] = useState("");
+
+  function handleEmail (event) {
+    setEmail(event.target.value);
+  }
+
+  function handleNickname (event) {
+    setNickname(event.target.value)
+  }
 
   async function tryJoin () {
 
     const {data} = {
       method: "POST",
-      url: 'https://ri2ar9z645.execute-api.ap-northeast-2.amazonaws.com',
+      url: 'https://ri2ar9z645.execute-api.ap-northeast-2.amazonaws.com/Join',
       data: {
         email: email,
         nickname: nickname
@@ -31,10 +39,6 @@ function Join () {
     </div>
   ) 
 
-
-
-
-
-
-
 }
+
+export default Join;

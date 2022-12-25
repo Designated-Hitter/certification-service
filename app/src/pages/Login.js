@@ -4,6 +4,12 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 function Login () {
 
+  const [email, setEmail] = useState("");
+
+  function handleEmail (event) {
+    setEmail(event.target.value);
+  }
+
   async function tryJoin () {
     Navigate('./join.html');
   }
@@ -11,7 +17,7 @@ function Login () {
   async function tryLogin() {
     const {data} = { //axios가 아닌 api gateway로 보내는 방법 조사하기
       method: "POST",
-      url: "https://ri2ar9z645.execute-api.ap-northeast-2.amazonaws.com",
+      url: "https://ri2ar9z645.execute-api.ap-northeast-2.amazonaws.com/Login",
       data: {
         email: email
       }
