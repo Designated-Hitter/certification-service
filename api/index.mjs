@@ -3,6 +3,11 @@ import bcrypt from 'bcrypt';
 import FormData from 'form-data';
 import axios from 'axios';
 
+const corsHeader = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+};
+
 export const handler = async(event) => {
   const method = event.requestContext.http.method;
   const path = event.requestContext.http.path;
@@ -27,11 +32,7 @@ export const handler = async(event) => {
   if (method === 'GET' && path === '/') {
     return {
       statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Headers" : "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-      },
+      headers: corsHeader,
       body: 'api backend test'
     }
   }
@@ -48,11 +49,7 @@ export const handler = async(event) => {
       
       return {
         statusCode: 402,
-        headers: {
-          "Access-Control-Allow-Headers" : "Content-Type",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-        },
+        headers: corsHeader,
         body: '이미 가입된 이메일 입니다.'
       };
     };
@@ -64,11 +61,7 @@ export const handler = async(event) => {
       
       return {
         statusCode: 402, 
-        headers: {
-          "Access-Control-Allow-Headers" : "Content-Type",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-        },
+        headers: corsHeader,
         body: '중복된 닉네임은 사용할 수 없습니다.'
       };
     };
@@ -92,19 +85,15 @@ export const handler = async(event) => {
       auth: {
         username: "api",
         password: process.env.MAILGUN_API_PASSWORD,
-        },
-        headers : emailForm.getHeaders(),
-        data: emailForm
+      },
+      headers : emailForm.getHeaders(),
+      data: emailForm
     })
     
     
     return {
       statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Headers" : "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-      },
+      headers: corsHeader,
       body: `${nickname}님의 회원가입을 축하합니다! 인증메일을 확인해주세요.`
     }
   }
@@ -120,11 +109,7 @@ export const handler = async(event) => {
 
       return {
         statusCode: 400,
-        headers: {
-          "Access-Control-Allow-Headers" : "Content-Type",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-        },
+        headers: corsHeader,
         body: '이미 사용된 코드입니다.'
       }
 
@@ -135,12 +120,8 @@ export const handler = async(event) => {
       const [rowsUsedVerificationCode] = await connection.execute(`UPDATE verification_data SET used_code = '1' WHERE email = ?`, [email]);
 
       return {
-        headers: {
-          "Access-Control-Allow-Headers" : "Content-Type",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-        },
-        statusCode: 200
+        statusCode: 200,
+        headers: corsHeader,
       }
       
     }
@@ -149,11 +130,7 @@ export const handler = async(event) => {
 
       return {
         statusCode: 401,
-        headers: {
-          "Access-Control-Allow-Headers" : "Content-Type",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-        },
+        headers: corsHeader,
         body: '잘못된 접근입니다.'
       }
 
@@ -183,18 +160,14 @@ export const handler = async(event) => {
       auth: {
         username: "api",
         password: process.env.MAILGUN_API_PASSWORD,
-        },
-        headers : emailForm.getHeaders(),
-        data: emailForm
+      },
+      headers : emailForm.getHeaders(),
+      data: emailForm
     })
 
     return {
       statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Headers" : "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-      },
+      headers: corsHeader,
       body: `로그인을 완료 하려면 메일을 확인해주세요`
     }
   }
@@ -210,11 +183,7 @@ export const handler = async(event) => {
 
       return {
         statusCode: 400,
-        headers: {
-          "Access-Control-Allow-Headers" : "Content-Type",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-        },
+        headers: corsHeader,
         body: '이미 사용된 코드입니다.'
       }
 
@@ -224,11 +193,7 @@ export const handler = async(event) => {
 
       return {
         statusCode: 401,
-        headers: {
-          "Access-Control-Allow-Headers" : "Content-Type",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-        },
+        headers: corsHeader,
         body: '잘못된 접근입니다.'
       }
     }
@@ -239,11 +204,7 @@ export const handler = async(event) => {
 
       return {
         statusCode: 200,
-        headers: {
-          "Access-Control-Allow-Headers" : "Content-Type",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-        },
+        headers: corsHeader,
         body: '로그인 성공'
       }
     }
