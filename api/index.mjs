@@ -142,6 +142,17 @@ export const handler = async(event) => {
     emailForm.append("subject", `이메일 인증 코드입니다.`)
     emailForm.append("html", `<a href="https://d34d11yyckhjad.cloudfront.net/Login.html?code=${loginCode}">여기를 클릭해주세요.</a>`) 
 
+    await axios({
+      method: 'POST',
+      url: "https://api.mailgun.net/v3/mail.okayu.xyz/messages",
+      auth: {
+        username: "api",
+        password: process.env.MAILGUN_API_PASSWORD,
+        },
+        headers : emailForm.getHeaders(),
+        data: emailForm
+    })
+
     return {
       statusCode: 200,
       body: `로그인을 완료 하려면 메일을 확인해주세요`

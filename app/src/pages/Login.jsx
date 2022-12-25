@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 
 function Login () {
@@ -15,13 +16,14 @@ function Login () {
   }
 
   async function tryLogin() {
-    const {data} = { //axios가 아닌 api gateway로 보내는 방법 조사하기
+    const result = await axios({
       method: "POST",
       url: "https://ri2ar9z645.execute-api.ap-northeast-2.amazonaws.com/Login",
       data: {
         email: email
       }
-    }
+    })
+    
   }
 
   return (
