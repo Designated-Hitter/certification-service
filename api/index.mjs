@@ -8,7 +8,7 @@ const corsHeader = {
 };
 
 const optionsCorsHeader = {
-  'Access-Control-Allow-Headers' : 'CContent-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+  'Access-Control-Allow-Headers' : 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'OPTIONS,GET,POST'
 
