@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 
-import Header from './pages/Header.js';
-import Login from './pages/Login.js';
-import Footer from './pages/Footer.js';
+import Header from './pages/Header';
+import Login from './pages/Login';
+import Footer from './pages/Footer';
 
 import './App.css'
 
