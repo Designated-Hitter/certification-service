@@ -51,7 +51,9 @@ export const handler = async(event) => {
       return {
         statusCode: 402,
         headers: corsHeader,
-        body: '이미 가입된 이메일 입니다.'
+        body: JSON.stringify({
+          message: '이미 가입된 이메일 입니다.'
+        })
       };
     };
 
@@ -63,7 +65,9 @@ export const handler = async(event) => {
       return {
         statusCode: 402, 
         headers: corsHeader,
-        body: '중복된 닉네임은 사용할 수 없습니다.'
+        body: JSON.stringify({
+          message: '중복된 닉네임은 사용할 수 없습니다.'
+        }),
       };
     };
 
@@ -95,7 +99,9 @@ export const handler = async(event) => {
     return {
       statusCode: 200,
       headers: corsHeader,
-      body: `${nickname}님의 회원가입을 축하합니다! 인증메일을 확인해주세요.`
+      body: JSON.stringify({
+        message: `${nickname}님의 회원가입을 축하합니다! 인증메일을 확인해주세요.`
+      }),
     }
   }
 
@@ -111,7 +117,9 @@ export const handler = async(event) => {
       return {
         statusCode: 400,
         headers: corsHeader,
-        body: '이미 사용된 코드입니다.'
+        body: JSON.stringify({
+          message: '이미 사용된 코드입니다.'
+        }),
       }
 
     }
@@ -123,6 +131,9 @@ export const handler = async(event) => {
       return {
         statusCode: 200,
         headers: corsHeader,
+        body: JSON.stringify({
+          message: '성공.'
+        }),
       }
       
     }
@@ -132,7 +143,9 @@ export const handler = async(event) => {
       return {
         statusCode: 401,
         headers: corsHeader,
-        body: '잘못된 접근입니다.'
+        body: JSON.stringify({
+          message: '잘못된 접근입니다.'
+        }),
       }
 
     }
@@ -169,7 +182,9 @@ export const handler = async(event) => {
     return {
       statusCode: 200,
       headers: corsHeader,
-      body: `로그인을 완료 하려면 메일을 확인해주세요`
+      body: JSON.stringify({
+        message: '로그인을 완료 하려면 메일을 확인해주세요.'
+      }),
     }
   }
 
@@ -185,7 +200,9 @@ export const handler = async(event) => {
       return {
         statusCode: 400,
         headers: corsHeader,
-        body: '이미 사용된 코드입니다.'
+        body: JSON.stringify({
+          message: '이미 사용된 코드입니다.'
+        }),
       }
 
     }
@@ -195,7 +212,9 @@ export const handler = async(event) => {
       return {
         statusCode: 401,
         headers: corsHeader,
-        body: '잘못된 접근입니다.'
+        body: JSON.stringify({
+          message: '잘못된 접근입니다.'
+        }),
       }
     }
 
@@ -206,7 +225,9 @@ export const handler = async(event) => {
       return {
         statusCode: 200,
         headers: corsHeader,
-        body: '로그인 성공'
+        body: JSON.stringify({
+          message: '로그인 성공.'
+        }),
       }
     }
 
