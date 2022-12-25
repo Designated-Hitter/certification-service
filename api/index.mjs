@@ -1,4 +1,9 @@
+import mysql from 'mysql2';
+import bcrypt from 'bcrypt';
+import FormData from 'form-data';
+
 export const handler = async(event) => {
+  
 
   const method = event.requestContext.http.method;
   const path = event.requestContext.http.path;
@@ -6,9 +11,7 @@ export const handler = async(event) => {
   const bodyString = event.body;
   const body = bodyString ? JSON.parse(bodyString) : null;
 
-  const mysql = require ('mysql2');
-  const bcrypt = require ('bcrypt');
-  const FormData = require('form-data');
+  
 
   const pool = mysql.createPool({
     host: 'db-private-cert-jeong.cluster-cqdqncbrwk60.ap-northeast-2.rds.amazonaws.com',
