@@ -9,7 +9,7 @@ export const handler = async(event) => {
   const mysql = require ('mysql2');
   const bcrypt = require ('bcrypt');
   const jwt = require('jsonwebtoken');
-  const code = requre('randexp');
+
   const FormData = require('form-data');
 
   const pool = mysql.createPool({
@@ -88,7 +88,7 @@ export const handler = async(event) => {
     const email = body.email;
     const hashedMail = bcrypt.hashSync(email, 10);
     let now = new Date();
-    const hashedDate = bcyrpt.hashSync(now, 10);
+    const hashedDate = bcrypt.hashSync(now, 10);
     const loginCode = bcrypt.hashSync(hashedMail + hashedDate, 10);
     const [rowsLoginCode] = await connection.execute(`INSERT INTO login-data(email, login_code) VALUES (?, ?)`, [email, loginCode]);
 
