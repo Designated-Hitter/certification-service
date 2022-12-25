@@ -4,8 +4,7 @@ import FormData from 'form-data';
 import axios from 'axios';
 
 const corsHeader = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+  'Access-Control-Allow-Origin': '*'
 };
 
 export const handler = async(event) => {
