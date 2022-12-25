@@ -16,14 +16,19 @@ function Login () {
   }
 
   async function tryLogin() {
-    const result = await axios({
-      method: "POST",
-      url: "https://ri2ar9z645.execute-api.ap-northeast-2.amazonaws.com/Login",
-      data: {
-        email: email
-      }
-    })
-    
+    try {
+      const result = await axios({
+        method: "POST",
+        url: "https://ri2ar9z645.execute-api.ap-northeast-2.amazonaws.com/Login",
+        data: {
+          email: email
+        }
+      });
+
+      alert(result.data.message);
+    } catch(e) {
+      alert('이메일 주소를 확인해주세요!');
+    }
   }
 
   return (
