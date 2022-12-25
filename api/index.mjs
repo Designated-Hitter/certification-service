@@ -4,18 +4,14 @@ import FormData from 'form-data';
 import axios from 'axios';
 import dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config({ path: "./.env" });
 
 export const handler = async(event) => {
-  
-
   const method = event.requestContext.http.method;
   const path = event.requestContext.http.path;
 
   const bodyString = event.body;
   const body = bodyString ? JSON.parse(bodyString) : null;
-
-  
 
   const pool = mysql.createPool({
     host: 'db-private-cert-jeong.cluster-cqdqncbrwk60.ap-northeast-2.rds.amazonaws.com',
@@ -50,9 +46,8 @@ export const handler = async(event) => {
       
       return {
         statusCode: 402,
-        success: false,
-        message: '이미 가입된 이메일 입니다.'
-        };
+        body: '이미 가입된 이메일 입니다.'
+      };
     };
 
     //중복 닉네임 체크
@@ -62,8 +57,7 @@ export const handler = async(event) => {
       
       return {
         statusCode: 402,
-        success: false,
-        message: '중복된 닉네임은 사용할 수 없습니다.'
+        body: '중복된 닉네임은 사용할 수 없습니다.'
       };
     };
 
@@ -94,8 +88,7 @@ export const handler = async(event) => {
     
     return {
       statusCode: 200,
-      success: true,
-      message: `${nickname}님의 회원가입을 축하합니다! 인증메일을 확인해주세요.`
+      body: `${nickname}님의 회원가입을 축하합니다! 인증메일을 확인해주세요.`
     }
   }
 
@@ -110,8 +103,7 @@ export const handler = async(event) => {
 
       return {
         statusCode: 400,
-        success: false,
-        message: '이미 사용된 코드입니다.'
+        body: '이미 사용된 코드입니다.'
       }
 
     }
@@ -121,8 +113,7 @@ export const handler = async(event) => {
       const [rowsUsedVerificationCode] = await connection.execute(`UPDATE verification_data SET used_code = '1' WHERE email = ?`, [email]);
 
       return {
-        statusCode: 200,
-        success: true,
+        statusCode: 200
       }
       
     }
@@ -131,8 +122,7 @@ export const handler = async(event) => {
 
       return {
         statusCode: 401,
-        success: false,
-        message: '잘못된 접근입니다.'
+        body: '잘못된 접근입니다.'
       }
 
     }
@@ -157,8 +147,7 @@ export const handler = async(event) => {
 
     return {
       statusCode: 200,
-      success: true,
-      message: `로그인을 완료 하려면 메일을 확인해주세요`
+      body: `로그인을 완료 하려면 메일을 확인해주세요`
     }
   }
 
@@ -173,8 +162,7 @@ export const handler = async(event) => {
 
       return {
         statusCode: 400,
-        success: false,
-        message: '이미 사용된 코드입니다.'
+        body: '이미 사용된 코드입니다.'
       }
 
     }
@@ -183,8 +171,7 @@ export const handler = async(event) => {
 
       return {
         statusCode: 401,
-        success: false,
-        message: '잘못된 접근입니다.'
+        body: '잘못된 접근입니다.'
       }
     }
 
@@ -194,8 +181,7 @@ export const handler = async(event) => {
 
       return {
         statusCode: 200,
-        success: true,
-        message: '로그인 성공'
+        body: '로그인 성공'
       }
     }
 
